@@ -46,6 +46,8 @@ Raw data generation scripts are not included but can be shared on request.
 - `data/` : Pre-prepared train and noisy test datasets  
 - `src/` : Model training and evaluation scripts (`train_model.py`, `evaluate_on_test.py`)  
 - `visualization/` : Optional standalone scripts generating charts and graphs, for train and test data separately
+- `notebooks/`: Contains the integrated Jupyter notebook (`risk_model_script.ipynb`) that implements the full workflow—data generation, hybrid return risk model training, evaluation on noisy test datasets, and visualization of results.
+- `results/` : Saved visualization results
 - `README.md` : This file containing project overview, dataset description, and instructions  
 - `requirements.txt` : Python dependencies for reproducibility and environment setup
 
@@ -83,6 +85,54 @@ For train data -
 For test data -
 ```python visualization/test_viz.py```
 
+
+## Test Evaluation Results
+
+```Test Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.90      0.98      0.94        53
+           1       0.98      0.87      0.92        47
+
+    accuracy                           0.93       100
+   macro avg       0.94      0.93      0.93       100
+weighted avg       0.93      0.93      0.93       100
+
+Test ROC-AUC Score: 0.9482135688478522
+Saved test risk predictions to 'test_risk_predictions.csv'
+```
+
+## Visualizations Results
+
+### Training Data
+
+#### Risk Category Distribution
+<img src="results/train_risk_category_distribution.png" alt="Train Risk Category Distribution" width="400"/>
+
+#### Return Reason Frequencies
+<img src="results/train_return_reason_frequencies.png" alt="Train Return Reason Frequencies" width="400"/>
+
+#### Feature Correlation Heatmap
+<img src="results/train_feature_correlation_heatmap.png" alt="Train Feature Correlation Heatmap" width="400"/>
+
+#### RandomForest Feature Importance
+<img src="results/train_feature_importance.png" alt="Train Feature Importance" width="400"/>
+
+### Test Data
+
+#### Predicted Risk Score Distribution
+<img src="results/test_predicted_risk_distribution.png" alt="Test Predicted Risk Distribution" width="400"/>
+
+#### Confusion Matrix
+<img src="results/test_confusion_matrix.png" alt="Test Confusion Matrix" width="400"/>
+
+#### Flagged vs Genuine Returns Counts
+<img src="results/test_flagged_vs_genuine_counts.png" alt="Test Flagged vs Genuine Counts" width="400"/>
+
+
+
+## Conclusion
+This project develops a hybrid return risk scoring model for Meesho, integrating buyer, seller, and regional data to identify fraudulent returns. The model achieves strong performance on noisy test data, and the results are supported by clear visualizations. All data, code, and analyses are provided for easy replication and extension.
 
 
 ## Authors
