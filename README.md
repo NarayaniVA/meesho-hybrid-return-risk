@@ -148,12 +148,18 @@ Deep learning models offer the ability to learn:
 - Non-linear relationships between diverse features that are hard to capture manually.  
 - Multi-modal data integration combining transaction logs, text, images, and metadata.
 
+Specific model architectures we plan to explore include:
+
+- **Buyer Fraud:** Deep Neural Networks (DNNs) that input buyer features to predict fraud probability with nuance.  
+- **Seller Risk:** Autoencoders trained on seller return and complaint rates to detect anomalous behaviors indicating potential fraud.  
+- **Regional Risk:** KMeans Clustering based on return-to-origin (RTO) and courier flag rates to identify high-risk geographic clusters.  
+- **Composite Risk:** A weighted combination of buyer, seller, and regional risk scores to produce a precise overall fraud risk metric.
+
 However, the true potential of these advanced methods can only be realized with extensive, feature-rich datasets encompassing detailed transactional histories, customer interactions, and logistic metadata.
 
 Once such comprehensive data is available, deep learning techniques are expected to significantly improve fraud detection accuracy, adaptability, and operational effectiveness—moving beyond the capabilities of ensemble tree-based models.
 
 This positions future work towards gathering richer datasets and experimenting with deep architectures to advance Meesho’s return abuse prevention system.
-
 
 ## Authors
 
