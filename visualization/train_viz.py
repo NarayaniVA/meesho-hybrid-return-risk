@@ -2,16 +2,20 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import os
+os.makedirs('results', exist_ok=True)
+
+
 # Load train data
-train_df = pd.read_csv('buyer_features_train.csv')
+train_df = pd.read_csv('data/buyer_features_train.csv')
 
 # 1. Class distribution pie chart
 plt.figure(figsize=(6,6))
 train_df['risk_category'].value_counts().plot.pie(autopct='%1.1f%%', startangle=90)
 plt.title('Train Data Risk Category Distribution')
 plt.ylabel('')
+plt.savefig('results/train_risk_category_distribution.png')
 plt.show()
-
 
 # 2. Return reason frequency bar plot (mean per reason)
 reason_cols = [c for c in train_df.columns if c.startswith('reason_')]
@@ -20,19 +24,21 @@ plt.figure(figsize=(10,5))
 sns.barplot(x=mean_reasons.values, y=mean_reasons.index, palette='Blues_r')
 plt.xlabel('Average Frequency')
 plt.title('Average Return Reason Frequencies (Train)')
+plt.savefig('results/train_return_reason_frequencies.png')
 plt.show()
 
 # 3. Correlation heatmap of numeric features
 plt.figure(figsize=(12,10))
 sns.heatmap(train_df.select_dtypes(include='number').corr(), annot=True, fmt=".2f", cmap='coolwarm', square=True)
 plt.title('Feature Correlation Heatmap (Train)')
+plt.savefig('results/train_feature_correlation_heatmap.png')
 plt.show()
 
 # 4. Feature importance bar plot from RandomForest model (requires trained model rf_model and feature_cols list)
 importances = rf_model.feature_importances_
 features = feature_cols
-
 plt.figure(figsize=(10,6))
 sns.barplot(x=importances, y=features)
 plt.title('RandomForest Feature Importance (Train)')
+plt.savefig('results/train_feature_importance.png')
 plt.show()
