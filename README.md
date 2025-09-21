@@ -56,6 +56,7 @@ Raw data generation scripts are not included but can be shared on request.
 ### Installation
 
 Install required Python libraries:
+
 ```pip install -r requirements.txt```
 
 
@@ -78,11 +79,13 @@ Evaluate the trained model on the noisy test dataset:
 ### Visualization
 
 Explore data characteristics and model performance through the visualization script:
+
 For train data -
 
 ```python visualization/train_viz.py```
 
 For test data -
+
 ```python visualization/test_viz.py```
 
 
