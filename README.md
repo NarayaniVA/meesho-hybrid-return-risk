@@ -137,6 +137,23 @@ Saved test risk predictions to 'test_risk_predictions.csv'
 ## Conclusion
 This project develops a hybrid return risk scoring model for Meesho, integrating buyer, seller, and regional data to identify fraudulent returns. The model achieves strong performance on noisy test data, and the results are supported by clear visualizations. All data, code, and analyses are provided for easy replication and extension.
 
+## Future Improvements: Deep Learning Approaches
+
+Our current Random Forest model serves as a robust proof of concept, developed without access to real, large-scale company data. It effectively captures structured patterns in return behavior but has limitations in modeling complex temporal and multi-dimensional interactions inherent to real-world fraud.
+
+Deep learning models offer the ability to learn:
+
+- Intricate sequential behaviors in buyer and seller actions over time.  
+- Hierarchical feature representations from structured and unstructured data (e.g., return reason texts, images).  
+- Non-linear relationships between diverse features that are hard to capture manually.  
+- Multi-modal data integration combining transaction logs, text, images, and metadata.
+
+However, the true potential of these advanced methods can only be realized with extensive, feature-rich datasets encompassing detailed transactional histories, customer interactions, and logistic metadata.
+
+Once such comprehensive data is available, deep learning techniques are expected to significantly improve fraud detection accuracy, adaptability, and operational effectiveness—moving beyond the capabilities of ensemble tree-based models.
+
+This positions future work towards gathering richer datasets and experimenting with deep architectures to advance Meesho’s return abuse prevention system.
+
 
 ## Authors
 
