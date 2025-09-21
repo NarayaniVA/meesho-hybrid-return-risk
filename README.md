@@ -44,9 +44,8 @@ Raw data generation scripts are not included but can be shared on request.
 ## Repository Structure
 
 - `data/` : Pre-prepared train and noisy test datasets  
-- `src/` : Model training and evaluation scripts (`model.py`, `evaluate.py`)  
-- `notebooks/` : Jupyter notebooks for exploratory data analysis and visualization  
-- `visualization/` : Optional standalone scripts generating charts and graphs  
+- `src/` : Model training and evaluation scripts (`train_model.py`, `evaluate_on_test.py`)  
+- `visualization/` : Optional standalone scripts generating charts and graphs, for train and test data separately
 - `README.md` : This file containing project overview, dataset description, and instructions  
 - `requirements.txt` : Python dependencies for reproducibility and environment setup
 
@@ -62,7 +61,7 @@ Install required Python libraries:
 
 Train the RandomForest model using the training dataset:
 
-```python src/model.py```
+```python src/train_model.py```
 
 
 
@@ -71,14 +70,18 @@ Train the RandomForest model using the training dataset:
 Evaluate the trained model on the noisy test dataset:
 
 
-```python src/evaluate.py```
+```python src/evaluate_on_test.py```
 
 
 ### Visualization
 
-Explore data characteristics and model performance through the Jupyter notebooks:
+Explore data characteristics and model performance through the visualization script:
+For train data -
 
-```jupyter notebook notebooks/data_visualization.ipynb```
+```python visualization/train_viz.py```
+
+For test data -
+```python visualization/test_viz.py```
 
 
 
