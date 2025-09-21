@@ -155,6 +155,11 @@ Specific model architectures we plan to explore include:
 - **Regional Risk:** KMeans Clustering based on return-to-origin (RTO) and courier flag rates to identify high-risk geographic clusters.  
 - **Composite Risk:** A weighted combination of buyer, seller, and regional risk scores to produce a precise overall fraud risk metric.
 
+For example, KMeans based regional risk clusters identification showing region groups with varying risk of return abuse based on RTO rates and courier flags:
+<p align="left">
+  <img src="https://drive.google.com/uc?export=view&id=14kQiVoewG78K_58VEQeFsdAQ9UsM1Gum" alt="Regional Risk Clusters" width="400"/>
+</p>
+
 However, the true potential of these advanced methods can only be realized with extensive, feature-rich datasets encompassing detailed transactional histories, customer interactions, and logistic metadata.
 
 Once such comprehensive data is available, deep learning techniques are expected to significantly improve fraud detection accuracy, adaptability, and operational effectiveness—moving beyond the capabilities of ensemble tree-based models.
