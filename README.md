@@ -8,48 +8,83 @@ Meesho’s unique zero-inventory and reseller-driven business model has empowere
 
 The scoring system computes a composite risk score combining:
 
-- Buyer risk based on return rates, flagged returns, and return reason categories  
-- Seller risk derived from normalized deviation from category-level return rates, seller complaints, and flagged returns  
-- Regional risk capturing geographic return characteristics and courier-specific issues  
+- Buyer risk reflected by return rates and detailed return reason categories
+- Seller risk derived from normalized deviation of seller return rates within categories and seller complaint rates  
+- Regional risk capturing geographic return-to-origin rates and courier-specific issue flags  
 
-Using synthetic data inspired by Meesho’s operations, the project demonstrates:
+This system is trained and validated on synthetic datasets inspired by Meesho’s data patterns using RandomForest predictive models.
+
+Using synthetic data mimicking Meesho’s operations, the project demonstrates:
 
 - Data generation mimicking customer risk profiles and return behaviors  
 - Training of RandomForest-based predictive models on buyer-level aggregated features  
-- Evaluation on noisy test return datasets reflecting real-world unpredictability  
-- Visualization of feature importance, return reason distributions, prediction scores, and classification performance metrics
+- Evaluation on noisy test return datasets reflecting real-world unpredictability with label noise  
+- Visualization of feature importance, return reason distributions, prediction scores, and classification performance metrics, including ROC-AUC and confusion matrices
+
 
 ## Dataset Details
 
-### Training Dataset (`data/buyer_features_train.csv`)
+### Individual Feature Datasets (Located in `data/` folder)
 
-The training dataset includes aggregated buyer-level features with labeled fraud indicators:
+#### Buyer Features (`data/buyer_features.csv`)
 
-- **Buyer Features:** Return ratios, duplicate image flags, device switch count, average order value  
-- **Seller Features:** Seller return rate deviation normalized within region/category, complaint rates  
-- **Regional Features:** Regional return-to-origin (RTO) rates, courier flag rates  
-- **Return Reason Features:** One-hot encoded categorical reasons for returns  
-- **Labels:** Fraud labels indicating genuine (0) or risky/high-risk (1) customers
+Includes detailed aggregated buyer-level information:
 
-### Test Dataset (`data/test_return_requests_noisy.csv`)
+- Buyer Return Ratios: Average proportion of returns made by each buyer  
+- Average Order Value: Mean transaction value by buyer  
+- Return Reason Categories: One-hot encoded flags for common return reasons (e.g., wrong item, defective)  
+- Risk Category Labels: Assigned risk group (genuine, risky, high risk)
 
-This dataset simulates real-world variability by adding noise:
+#### Seller Features (`data/seller_features.csv`)
 
-- Similar feature set as training but with Gaussian noise added to numeric features  
-- 5% of true labels flipped to model label uncertainty and misclassifications  
-- Intended to challenge model generalization and robustness evaluation
+Captures seller-related return and complaint statistics:
 
-Raw data generation scripts are not included but can be shared on request.
+- Seller Return Rate: Average return proportion for each seller  
+- Seller Complaint Rate: Simulated or reported complaint rates per seller  
+- Risk Level: Quantile-binned risk classification based on return performance
+
+#### Regional Features (`data/region_features.csv`)
+
+Aggregated return metrics at the regional level for logistic impact assessment:
+
+- Region Return-to-Origin Rate (RTO): Proportion of returns sent back to sender by region  
+- Courier Flag Rate: Rate of flagged issues related to courier service  
+- Risk Level: Manually assigned risk categories based on RTO and courier flags
+
+---
+
+### Consolidated Training Dataset (`data/consolidated_train_dataset.csv`)
+
+This aggregate dataset merges buyer, seller, and regional features into a unified view, including:
+
+- Aggregated buyer features with detailed return reasons  
+- Seller metrics normalized within region or category context  
+- Region-level return and logistics risk metrics  
+- Derived features such as seller deviation score and composite risk score  
+- Fraud labels indicating genuine (0) or risky/high-risk (1) customers
+
+---
+
+### Test Dataset (`data/test_noisy_dataset.csv`)
+
+Represents a noisy real-world-like scenario by:
+
+- Containing the same feature columns as the consolidated training set  
+- Adding Gaussian noise to numeric features to simulate measurement variability  
+- Flipping 5% of true fraud labels to reflect mislabeling or ambiguous cases  
+- Challenging model robustness and generalizability in evaluation
+
+Raw synthetic data generation scripts are not included but can be shared upon request.
 
 ## Repository Structure
 
-- `data/` : Pre-prepared train and noisy test datasets  
-- `src/` : Model training and evaluation scripts (`train_model.py`, `evaluate_on_test.py`)  
-- `visualization/` : Optional standalone scripts generating charts and graphs, for train and test data separately
-- `notebooks/`: Contains the integrated Jupyter notebook (`risk_model_script.ipynb`) that implements the full workflow—data generation, hybrid return risk model training, evaluation on noisy test datasets, and visualization of results.
-- `results/` : Saved visualization results
-- `README.md` : This file containing project overview, dataset description, and instructions  
-- `requirements.txt` : Python dependencies for reproducibility and environment setup
+- `data/` : Contains pre-prepared datasets including consolidated training data, noisy test data, and individual buyer, seller, and regional feature files  
+- `src/` : Source code for model training and evaluation scripts (`train_model.py`, `evaluate_on_test.py`)  
+- `visualization/` : Standalone scripts for generating visualizations separately for training and test datasets  
+- `notebooks/` : Jupyter notebooks implementing the full workflow from model training, evaluation, to visualization (`risk_model_script.ipynb`)  
+- `results/` : Output directory for saving generated plots, charts, and model prediction results  
+- `README.md` : Project overview, dataset details, usage instructions, and documentation  
+- `requirements.txt` : Python library dependencies for environment setup and reproducibility
 
 ## Setup and Usage
 
@@ -94,48 +129,52 @@ For test data -
 ```Test Classification Report:
               precision    recall  f1-score   support
 
-           0       0.90      0.98      0.94        53
-           1       0.98      0.87      0.92        47
+           0       0.95      0.97      0.96        65
+           1       0.94      0.91      0.93        35
 
-    accuracy                           0.93       100
-   macro avg       0.94      0.93      0.93       100
-weighted avg       0.93      0.93      0.93       100
+    accuracy                           0.95       100
+   macro avg       0.95      0.94      0.94       100
+weighted avg       0.95      0.95      0.95       100
 
-Test ROC-AUC Score: 0.9482135688478522
-Saved test risk predictions to 'test_risk_predictions.csv'
+ROC-AUC Score: 0.9408791208791208
 ```
 
 ## Visualizations Results
 
 ### Training Data
 
-#### Risk Category Distribution
-<img src="results/train_risk_category_distribution.png" alt="Train Risk Category Distribution" width="400"/>
+#### Buyer Risk Category Distribution
+<img src="results/buyer_risk_category_distribution.png" alt="Buyer Risk Category Distribution" width="400"/>
 
-#### Return Reason Frequencies
-<img src="results/train_return_reason_frequencies.png" alt="Train Return Reason Frequencies" width="400"/>
+#### Return Reason Frequencies (Buyer)
+<img src="results/average_return_reason_frequencies.png" alt="Average Return Reason Frequencies" width="400"/>
 
 #### Feature Correlation Heatmap
-<img src="results/train_feature_correlation_heatmap.png" alt="Train Feature Correlation Heatmap" width="400"/>
+<img src="results/feature_correlation_heatmap.png" alt="Feature Correlation Heatmap" width="400"/>
 
 #### RandomForest Feature Importance
-<img src="results/train_feature_importance.png" alt="Train Feature Importance" width="400"/>
+<img src="results/feature_importance.png" alt="RandomForest Feature Importance" width="400"/>
 
 ### Test Data
 
-#### Predicted Risk Score Distribution
-<img src="results/test_predicted_risk_distribution.png" alt="Test Predicted Risk Distribution" width="400"/>
+#### Predicted Fraud Probability Distribution
+<img src="results/test_predicted_probability_distribution.png" alt="Test Predicted Fraud Probability Distribution" width="400"/>
 
 #### Confusion Matrix
 <img src="results/test_confusion_matrix.png" alt="Test Confusion Matrix" width="400"/>
 
-#### Flagged vs Genuine Returns Counts
-<img src="results/test_flagged_vs_genuine_counts.png" alt="Test Flagged vs Genuine Counts" width="400"/>
+#### Flagged vs Genuine Return Counts
+<img src="results/test_flagged_vs_genuine_counts.png" alt="Test Flagged vs Genuine Return Counts" width="400"/>
+
 
 
 
 ## Conclusion
-This project develops a hybrid return risk scoring model for Meesho, integrating buyer, seller, and regional data to identify fraudulent returns. The model achieves strong performance on noisy test data, and the results are supported by clear visualizations. All data, code, and analyses are provided for easy replication and extension.
+
+This project develops a hybrid return risk scoring model tailored for Meesho, integrating buyer, seller, and regional data sources to effectively identify fraudulent returns. Leveraging synthetic datasets inspired by Meesho’s operational patterns, the model achieves strong performance on noisy test data, demonstrating robustness to label noise and feature variability. Clear and comprehensive visualizations support the analytical results, illustrating feature importance, risk category distributions, and classification outcomes.
+
+All data, code, and analyses are provided to facilitate easy replication
+
 
 ## Future Improvements: Deep Learning Approaches
 
