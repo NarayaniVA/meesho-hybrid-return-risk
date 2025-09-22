@@ -3,39 +3,37 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, roc_auc_score
 
-# Load training data and test data
-train_df = pd.read_csv('data/buyer_features_train.csv')
-test_df = pd.read_csv('data/test_return_requests_noisy.csv')
+# Load consolidated training and noisy test datasets
+train_df = pd.read_csv('data/consolidated_train_dataset.csv')
+test_df = pd.read_csv('data/test_noisy_dataset.csv')
 
-exclude_cols = ['customer_id', 'risk_category', 'fraud_label']
+exclude_cols = ['buyer_id', 'seller', 'region', 'risk_category', 'fraud_label', 'composite_risk_score']
 feature_cols = [c for c in train_df.columns if c not in exclude_cols]
 
-# Prepare train data for scaler and model recreation
 X_train = train_df[feature_cols]
 y_train = train_df['fraud_label']
-
-# Prepare test data
 X_test = test_df[feature_cols]
+y_test = test_df['fraud_label']
 
 # Scale features
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# Train model on full training data (again since no saved model)
+# Train RandomForest
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_model.fit(X_train_scaled, y_train)
 
-# Predict test probabilities
-test_probs = rf_model.predict_proba(X_test_scaled)[:, 1]
-test_preds = (test_probs > 0.5).astype(int)
+# Predict and evaluate
+y_pred = rf_model.predict(X_test_scaled)
+y_prob = rf_model.predict_proba(X_test_scaled)[:, 1]
 
-test_df['predicted_risk'] = test_probs
-test_df['flagged'] = test_preds
+print("Classification Report:")
+print(classification_report(y_test, y_pred))
+print("ROC-AUC Score:", roc_auc_score(y_test, y_prob))
 
-print("Test Classification Report:")
-print(classification_report(test_df['true_label'], test_preds))
-print("Test ROC-AUC Score:", roc_auc_score(test_df['true_label'], test_probs))
-
-test_df[['test_order_id', 'customer_id', 'return_reason', 'predicted_risk', 'flagged', 'true_label']].to_csv('test_risk_predictions.csv', index=False)
-print("Saved test risk predictions to 'test_risk_predictions.csv'")
+# Save predictions
+test_df['predicted_label'] = y_pred
+test_df['predicted_proba'] = y_prob
+test_df.to_csv('test_predictions.csv', index=False)
+print("Test predictions saved to 'test_predictions.csv'")
